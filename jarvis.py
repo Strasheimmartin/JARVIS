@@ -21,6 +21,19 @@ import pickle
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 import io
 from datetime import datetime, timedelta
+from colorama import init, Fore, Style
+init(autoreset=True)
+
+COLOR_USER = Fore.CYAN + Style.BRIGHT
+COLOR_JARVIS = Fore.GREEN + Style.BRIGHT
+COLOR_RESET = Style.RESET_ALL
+
+from colorama import init, Fore, Style
+init(autoreset=True)
+
+COLOR_USER = Fore.CYAN + Style.BRIGHT
+COLOR_JARVIS = Fore.GREEN + Style.BRIGHT
+COLOR_RESET = Style.RESET_ALL
 
 
 openai.api_key = "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"
@@ -61,7 +74,8 @@ def enviar_email(destinatario, asunto, cuerpo):
         create_message = {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
         send_message = service.users().messages().send(userId="me", body=create_message).execute()
         texto = frases_chatbot(f"Email enviado a {destinatario} con asunto '{asunto}'.")
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     except Exception as e:
         print(f"No se pudo enviar el email: {e}")
@@ -153,7 +167,8 @@ def abrir_app_calc():
         else:
             subprocess.Popen(["gnome-calculator"])
         texto = frases_chatbot("Calculadora abierta correctamente.")
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     except Exception as e:
         print(f"No se pudo abrir la calculadora: {e}")
@@ -169,7 +184,8 @@ def abrir_app_spotify():
         else:
             subprocess.Popen(["spotify"])
         texto = frases_chatbot("Spotify abierto correctamente.")
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     except Exception as e:
         print(f"No se pudo abrir Spotify: {e}")
@@ -185,7 +201,8 @@ def abrir_app_notepad():
         else:
             subprocess.Popen(["gedit"])
         texto = frases_chatbot("Bloc de notas abierto correctamente.")
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     except Exception as e:
         print(f"No se pudo abrir el bloc de notas: {e}")
@@ -196,7 +213,8 @@ def abrir_app_browser():
         import webbrowser
         webbrowser.open("https://www.google.com")
         texto = frases_chatbot("Navegador abierto correctamente.")
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     except Exception as e:
         print(f"No se pudo abrir el navegador: {e}")
@@ -222,7 +240,8 @@ def escuchar():
         audio = r.listen(source)
     try:
         texto = r.recognize_google(audio, language="es-AR")
-        print(f"Vos dijiste: {texto}")
+        print(COLOR_USER + f"Vos dijiste: {texto}" + COLOR_RESET)
+
         hablar(f"Entendí: {texto}")
         return texto
     except Exception as e:
@@ -385,7 +404,8 @@ def ejecutar_archivo(comando):
         if not os.path.exists(nombre):
             os.makedirs(nombre)
             texto = frases_chatbot(f"Carpeta '{nombre}' creada.")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         else:
             print(f"La carpeta '{nombre}' ya existe.")
@@ -398,7 +418,8 @@ def ejecutar_archivo(comando):
             with open(nombre.strip(), "w", encoding="utf-8") as f:
                 f.write(contenido.strip().strip('"'))
             texto = frases_chatbot(f"Archivo '{nombre.strip()}' creado con el contenido indicado.")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         else:
             print("Formato incorrecto para crear archivo.")
@@ -453,12 +474,14 @@ def ejecutar_archivo(comando):
         if os.path.isdir(nombre):
             os.rmdir(nombre)
             texto = frases_chatbot(f"Carpeta '{nombre}' borrada.")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         elif os.path.isfile(nombre):
             os.remove(nombre)
             texto = frases_chatbot(f"Archivo '{nombre}' borrado.")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         else:
             print(f"No se encontró '{nombre}'.")
@@ -474,7 +497,8 @@ def ejecutar_archivo(comando):
             else:
                 subprocess.Popen(["xdg-open", archivo])
             texto = frases_chatbot(f"'{archivo}' abierto correctamente.")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         except Exception as e:
             print(f"No se pudo abrir el archivo: {e}")
@@ -482,7 +506,8 @@ def ejecutar_archivo(comando):
     elif comando.startswith("listar_archivos:"):
         path = comando.split("listar_archivos:",1)[1].strip() or "."
         texto = "Archivos y carpetas en la ubicación seleccionada:\n" + listar_archivos_carpeta(path)
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar("Listando archivos y carpetas en la ubicación seleccionada.")
     elif comando.startswith("script_python:"):
         partes = comando.split("script_python:",1)[1].split(":",1)
@@ -491,7 +516,8 @@ def ejecutar_archivo(comando):
             with open(nombre.strip(), "w", encoding="utf-8") as f:
                 f.write(contenido.strip().strip('"'))
             texto = frases_chatbot(f"Script Python '{nombre.strip()}' creado. Ejecutando...")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
             try:
                 subprocess.run(["python", nombre.strip()])
@@ -504,7 +530,8 @@ def ejecutar_archivo(comando):
     elif comando.startswith("info_sistema:"):
         tipo = comando.split("info_sistema:",1)[1].strip().lower()
         texto = info_sistema(tipo)
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     elif comando.startswith("descargar:"):
         partes = comando.split("descargar:",1)[1].split(":",1)
@@ -514,24 +541,28 @@ def ejecutar_archivo(comando):
         else:
             url = comando.split("descargar:",1)[1].strip()
             texto = descargar_archivo(url)
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     elif comando.startswith("buscar_web:"):
         query = comando.split("buscar_web:",1)[1].strip()
         texto = buscar_en_web(query)
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     elif comando.startswith("macro_limpieza:"):
         carpeta = comando.split("macro_limpieza:",1)[1].strip()
         texto = crear_macro_limpieza(carpeta)
-        print(texto)
+        print(COLOR_JARVIS + texto + COLOR_RESET)
+
         hablar(texto)
     elif comando.startswith("crear_proyecto:"):
         partes = comando.split("crear_proyecto:",1)[1].split(":",1)
         if len(partes) == 2:
             tipo, nombre = partes
             texto = crear_proyecto(tipo.strip(), nombre.strip())
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         else:
             print("Formato incorrecto para crear proyecto.")
@@ -560,7 +591,8 @@ def ejecutar_archivo(comando):
         try:
             subprocess.Popen(comando, shell=True)
             texto = frases_chatbot("Pedido ejecutado.")
-            print(texto)
+            print(COLOR_JARVIS + texto + COLOR_RESET)
+
             hablar(texto)
         except Exception as e:
             print(f"Error al ejecutar: {e}")
@@ -615,7 +647,8 @@ NO EXPLIQUES, SOLO DEVOLVÉ EL COMANDO.
 def main():
     bienvenida()
     while True:
-        entrada = input("JARVIS> ")
+        entrada = input(COLOR_USER + "MARTÍN> " + COLOR_RESET)
+
         if entrada.strip().lower() in ["escuchame", "escuchar", "voice", "mic"]:
             texto = escuchar()
             if texto:
